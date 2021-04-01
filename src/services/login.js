@@ -1,5 +1,5 @@
-const axios = require('axios')
-const { BASE_URL } = require('../constants')
+import axios from 'axios'
+import { BASE_URL } from '../constants'
 
 const login = async (data) => {
   const options = {
@@ -11,11 +11,11 @@ const login = async (data) => {
   
   const response = await axios(options)
     .then(res => res)
-    .catch(err => err)
+    .catch(err => err.response)
   
   return response
 }
 
-module.exports = {
+export {
   login
 }

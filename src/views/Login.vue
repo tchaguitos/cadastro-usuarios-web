@@ -29,7 +29,7 @@
         </b-form-invalid-feedback>
       </b-input-group>
 
-      <b-input-group id="input-group-2" class="mb-2">
+      <b-input-group id="input-group-2" class="mb-3">
         <b-form-input
           required
           type="password"
@@ -45,7 +45,13 @@
       </b-input-group>
 
       <div class="text-right">
-        <button type="submit" class="btn btn-primary">Acessar</button>
+        <router-link to="/cadastro">
+          Ainda não tem uma conta? Cadastre-se
+        </router-link>
+
+        <br>
+
+        <button type="submit" class="btn btn-primary mt-4">Acessar</button>
       </div>
     </form>
 
@@ -131,7 +137,6 @@ export default {
 }
 
 footer {
-  position: fixed;
   padding: 24px 0;
   left: 0;
   bottom: 0;
