@@ -1,32 +1,53 @@
 <template>
-  <div id="main" class="container text-center mt-5">
-    <div class="form-signin container border col-md-6 offset-md-3 mb-5">
-      <img class="mb-4" src="@/assets/rocket.svg" alt="" width="94" height="94">
+  <div id="main" class="container mt-5">
+    <form class="form-signin container col-md-6 offset-md-3 mb-5 border shadow-sm" @submit="login" >
+      
+      <b-img class="mb-4" src="@/assets/rocket.svg" alt="" width="94" height="94" center/>
 
-      <h3 class="h3 mt-4 mb-5 font-weight-normal">Faça login para continuar</h3>
+      <h3 class="h3 mt-4 mb-5 text-center font-weight-normal">Faça login para continuar</h3>
 
-      <div v-if="error" class="alert alert-warning">{{ error }}</div>
+      <b-alert
+        :show="error"
+        variant="warning"
+        dismissible
+        @dismissed="error=false">
+          {{ message }}
+      </b-alert>
 
-      <div class="form-group">
-        <input
+      <b-input-group id="input-group-2" class="mb-2">
+        <b-form-input
+          required
           type="email"
-          class="form-control"
+          id="email"
           placeholder="E-mail"
-          v-model="email"
-          required autofocus>
+          v-model="$v.email.$model"
+          :state="validateState('email')"
+        ></b-form-input>
 
-        <input
+        <b-form-invalid-feedback :state="validateState('email')">
+          Por favor, forneça um endereço de e-mail válido
+        </b-form-invalid-feedback>
+      </b-input-group>
+
+      <b-input-group id="input-group-2" class="mb-2">
+        <b-form-input
+          required
           type="password"
-          class="form-control mt-2"
+          id="password"
           placeholder="Senha"
-          v-model="senha"
-          required>
-      </div>
+          v-model="$v.password.$model"
+          :state="validateState('password')"
+        ></b-form-input>
+
+        <b-form-invalid-feedback :state="validateState('password')">
+          Por favor, você deve fornecer uma senha válida para continuar
+        </b-form-invalid-feedback>
+      </b-input-group>
 
       <div class="text-right">
-        <button class="btn btn-primary" @click="login">Acessar</button>
+        <button type="submit" class="btn btn-primary">Acessar</button>
       </div>
-    </div>
+    </form>
 
     <footer class="mt-5">
       Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
@@ -37,37 +58,64 @@
 <script>
 import { login } from '../services/login'
 
+import { validationMixin } from 'vuelidate'
+import { required, email, minLength } from 'vuelidate/lib/validators'
+
 export default {
     name: 'Login',
+    mixins: [validationMixin],
     data() {
       return {
         email: '',
-        senha: '',
-        error: null
+        password: '',
+        error: false,
+        message: null,
       }
     },
     methods: {
+      validateState(field) {
+        if (this.$v[field].$model) {
+          return this.$v[field].$dirty ? !this.$v[field].$invalid : null
+        }
+      },
       login: async function(e) {
         e.preventDefault()
 
-        let data = {
-          'email': this.email,
-          'password': this.senha
+        try {
+          let data = {
+            'email': this.email,
+            'password': this.password
+          }
+
+          let response = await login(data)
+
+          if (response.status == 200) {
+
+            localStorage.setItem('token', response.data.access)
+            localStorage.setItem('refreshToken', response.data.refresh)
+
+            this.$router.replace({ name: 'home' })
+
+          } else if (response.status == 401) {
+            this.error = true
+            this.message = 'Usuário ou senha incorretos'
+          }
+        
+        } catch (e) {
+          this.error = true
+          this.message = 'Ocorreu um erro interno. Por favor, tente novamente mais tarde'
         }
-
-        let response = await login(data)
-
-        if (response.status == 200) {
-
-          localStorage.setItem('token', response.data.access)
-          localStorage.setItem('refreshToken', response.data.refresh)
-
-          this.$router.replace({ name: 'home' })
-
-        } else if (response.status == 401) {
-          this.error = 'Usuário ou senha incorretos'
-        }
+      }
+    },
+    validations: {
+      email: {
+        required,
+        email
       },
+      password: {
+        required,
+        minLength: minLength(8)
+      }
     }
 }
 </script>
@@ -78,8 +126,8 @@ export default {
 }
 
 .form-signin {
-  padding-top: 48px;
-  padding-bottom: 48px;
+  padding-top: 74px;
+  padding-bottom: 94px;
 }
 
 footer {
