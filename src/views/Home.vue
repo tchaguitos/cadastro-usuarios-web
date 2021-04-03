@@ -3,6 +3,10 @@
     <header>
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">Dashboard</a>
+
+        <b-button v-b-modal.modal-1>
+          Sair
+        </b-button>
       </nav>
     </header>
 
@@ -45,6 +49,18 @@
         </b-card>
       </div>
     </main>
+
+    <b-modal
+      id="modal-1"
+      title="Você realmente deseja sair?"
+      ok-title="Sair"
+      cancel-title="Cancelar"
+      @ok="logout">
+
+      <p class="my-4">
+        Clique em "sair" se realmente deseja sair
+      </p>
+    </b-modal>
   </div>
 </template>
 
