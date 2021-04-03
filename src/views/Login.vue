@@ -137,6 +137,7 @@ export default {
 }
 
 footer {
+  position: fixed;
   padding: 24px 0;
   left: 0;
   bottom: 0;
