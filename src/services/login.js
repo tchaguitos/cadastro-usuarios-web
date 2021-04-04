@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { BASE_URL } from '../constants'
+
+const BASE_URL = process.env.VUE_APP_BASE_URL
 
 const login = async (data) => {
   const options = {
