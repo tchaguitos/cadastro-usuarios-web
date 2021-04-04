@@ -4,7 +4,13 @@
       
       <b-img class="mb-4" src="@/assets/rocket.svg" alt="" width="94" height="94" center/>
 
-      <h3 class="h3 mt-4 mb-5 text-center font-weight-normal">Faça login para continuar</h3>
+      <h4 class="mt-4 text-center font-weight-normal">
+        Faça login para continuar
+      </h4>
+
+      <p class="text-center text-muted mb-5">
+        Olá, visitante! Por favor, faça login para continuar
+      </p>
 
       <b-alert
         :show="error"
