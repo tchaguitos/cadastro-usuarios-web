@@ -276,6 +276,7 @@ export default {
       logout: async function() {
         localStorage.removeItem('token')
         localStorage.removeItem('refreshToken')
+        localStorage.removeItem('profile')
 
         this.$router.replace({ name: 'login' })
       }
