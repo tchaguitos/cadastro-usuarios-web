@@ -211,6 +211,7 @@
 
 <script>
 import { updateProfile } from '../services/profile'
+import { getAllCities } from '../services/city'
 
 import { validationMixin } from 'vuelidate'
 import { required, email, minLength, numeric } from 'vuelidate/lib/validators'
@@ -233,8 +234,21 @@ export default {
           let profile = await localStorage.getItem('profile')
           this.profile = JSON.parse(profile)
 
+          this.profile.municipio = this.profile.municipio.id
+
         } catch (e) {
+          console.error(e)
           this.error = 'Ocorreu um erro ao buscar o perfil. Por favor, tente novamente mais tarde'
+        }
+      },
+      getCities: async function() {
+        try {
+          let allCities = await getAllCities()
+          this.municipioList = allCities.data
+
+        } catch (e) {
+          console.error(e)
+          this.error = 'Ocorreu um erro ao buscar as cidades. Por favor, tente novamente mais tarde'
         }
       },
       validateState(field) {
@@ -318,6 +332,7 @@ export default {
       }
     },
     created: function() {
+      this.getCities()
       this.getUser()
     },
 }
