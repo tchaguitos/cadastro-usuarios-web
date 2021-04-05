@@ -57,7 +57,9 @@
 
         <br>
 
-        <button type="submit" class="btn btn-primary mt-4">Acessar</button>
+        <b-button variant="primary" :disabled="loading" type="submit" class="mt-4">
+          Acessar <b-spinner small v-if="loading" class="ml-2"></b-spinner>
+        </b-button>
       </div>
     </form>
 
@@ -82,6 +84,7 @@ export default {
         password: '',
         error: false,
         message: null,
+        loading: false
       }
     },
     methods: {
@@ -91,6 +94,8 @@ export default {
         }
       },
       login: async function(e) {
+        this.loading = true
+
         e.preventDefault()
 
         try {
@@ -108,14 +113,20 @@ export default {
 
             this.$router.replace({ name: 'home' })
 
+            this.loading = false
+
           } else if (response.status == 401) {
             this.error = true
             this.message = 'Usuário ou senha incorretos'
+
+            this.loading = false
           }
         
         } catch (e) {
           this.error = true
           this.message = 'Ocorreu um erro interno. Por favor, tente novamente mais tarde'
+
+          this.loading = false
         }
       }
     },
