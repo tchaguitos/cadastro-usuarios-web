@@ -204,7 +204,9 @@
 
         <br>
 
-        <button type="submit" class="btn btn-primary mt-4">Criar conta</button>
+        <b-button variant="primary" :disabled="loading" type="submit" class="mt-4">
+          Criar conta <b-spinner small v-if="loading" class="ml-2"></b-spinner>
+        </b-button>
       </div>
     </form>
 
@@ -241,6 +243,7 @@ export default {
         error: false,
         errorObject: null,
         message: null,
+        loading: false
       }
     },
     methods: {
@@ -254,6 +257,8 @@ export default {
         this.municipioList = allCities.data
       },
       signUp: async function(e) {
+        this.loading = true
+
         e.preventDefault()
 
         try {
@@ -276,14 +281,20 @@ export default {
           if (response.status == 201) {
             this.$router.replace({ name: 'login' })
 
+            this.loading = false
+
           } else if (response.status == 400) {
             this.error = true
             this.errorObject = response.data
+
+            this.loading = false
           }
         
         } catch (e) {
           this.error = true
           this.message = 'Ocorreu um erro interno. Por favor, tente novamente mais tarde'
+
+          this.loading = false
         }
       }
     },
