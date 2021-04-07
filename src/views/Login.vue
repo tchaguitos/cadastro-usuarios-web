@@ -23,15 +23,15 @@
       <b-input-group id="input-group-2" class="mb-2">
         <b-form-input
           required
-          type="email"
+          type="text"
           id="email"
-          placeholder="E-mail"
+          placeholder="E-mail, CPF ou PIS"
           v-model="$v.email.$model"
           :state="validateState('email')"
         ></b-form-input>
 
         <b-form-invalid-feedback :state="validateState('email')">
-          Por favor, forneça um endereço de e-mail válido
+          Por favor, forneça um endereço de e-mail, CPF ou PIS/PASEP válido
         </b-form-invalid-feedback>
       </b-input-group>
 
@@ -73,7 +73,7 @@
 import { login } from '../services/login'
 
 import { validationMixin } from 'vuelidate'
-import { required, email, minLength } from 'vuelidate/lib/validators'
+import { required, email, minLength, numeric, or } from 'vuelidate/lib/validators'
 
 export default {
     name: 'Login',
@@ -133,7 +133,7 @@ export default {
     validations: {
       email: {
         required,
-        email
+        or: or(email, numeric)
       },
       password: {
         required,
